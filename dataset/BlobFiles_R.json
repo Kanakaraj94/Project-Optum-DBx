@@ -1,0 +1,55 @@
+{
+	"name": "BlobFiles_R",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Blob2Adf_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "optum"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Patient_id",
+				"type": "String"
+			},
+			{
+				"name": "Patient_name",
+				"type": "String"
+			},
+			{
+				"name": "patient_gender",
+				"type": "String"
+			},
+			{
+				"name": "patient_birth_date",
+				"type": "String"
+			},
+			{
+				"name": "patient_phone",
+				"type": "String"
+			},
+			{
+				"name": "disease_name",
+				"type": "String"
+			},
+			{
+				"name": "city",
+				"type": "String"
+			},
+			{
+				"name": "hospital_id",
+				"type": "String"
+			}
+		]
+	}
+}
