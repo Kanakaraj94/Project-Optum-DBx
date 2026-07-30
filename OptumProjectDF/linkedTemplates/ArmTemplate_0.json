@@ -321,7 +321,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "Hospital_B.csv",
+						"fileName": "Hospital.csv",
 						"folderPath": "medallion/bronze",
 						"fileSystem": "optum"
 					},
