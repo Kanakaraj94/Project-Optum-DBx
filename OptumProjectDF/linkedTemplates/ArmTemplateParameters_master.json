@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "OptumProjectDF"
+		},
+		"Adls2Adf_ls_properties_typeProperties_url": {
+			"value": "https://adlsdataoptum.dfs.core.windows.net"
+		},
+		"AzureKeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://keyvaultOptum.vault.azure.net/"
+		},
+		"Blob2Adf_ls_properties_typeProperties_connectionString_secretName": {
+			"value": "BlobConnStr"
+		},
+		"Mongo2Adf_ls_properties_typeProperties_connectionString_secretName": {
+			"value": "MongoConnStr"
+		},
+		"Mongo2Adf_ls_properties_typeProperties_database": {
+			"value": "optum_db"
+		},
+		"MySql2Adf_ls_properties_typeProperties_server": {
+			"value": "localhost"
+		},
+		"MySql2Adf_ls_properties_typeProperties_database": {
+			"value": "optum_db"
+		},
+		"MySql2Adf_ls_properties_typeProperties_username": {
+			"value": "root"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
