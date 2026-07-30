@@ -1,0 +1,20 @@
+{
+	"name": "Claims_B",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Adls2Adf_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Claims.json",
+				"folderPath": "medallion/bronze",
+				"fileSystem": "optum"
+			}
+		},
+		"schema": {}
+	}
+}
