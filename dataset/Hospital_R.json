@@ -1,0 +1,15 @@
+{
+	"name": "Hospital_R",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MySql2Adf_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "`hospital_tb`"
+		}
+	}
+}
