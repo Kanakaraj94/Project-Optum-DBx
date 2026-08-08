@@ -5,6 +5,12 @@
 		"factoryName": {
 			"value": "OptumProjectDF"
 		},
+		"Adf2DBx_ls_accessToken": {
+			"value": ""
+		},
+		"Adf2DBx_ls_properties_typeProperties_existingClusterId": {
+			"value": "0730-154810-7759anxv"
+		},
 		"Adls2Adf_ls_properties_typeProperties_url": {
 			"value": "https://adlsdataoptum.dfs.core.windows.net"
 		},

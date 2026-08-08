@@ -7,6 +7,14 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "OptumProjectDF"
 		},
+		"Adf2DBx_ls_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'Adf2DBx_ls'"
+		},
+		"Adf2DBx_ls_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0730-154810-7759anxv"
+		},
 		"Adls2Adf_ls_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adlsdataoptum.dfs.core.windows.net"
@@ -65,6 +73,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Adf2DBx_ls_accessToken": {
+						"value": "[parameters('Adf2DBx_ls_accessToken')]"
+					},
+					"Adf2DBx_ls_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('Adf2DBx_ls_properties_typeProperties_existingClusterId')]"
 					},
 					"AzureKeyVault_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AzureKeyVault_properties_typeProperties_baseUrl')]"

@@ -7,6 +7,14 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "OptumProjectDF"
 		},
+		"Adf2DBx_ls_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'Adf2DBx_ls'"
+		},
+		"Adf2DBx_ls_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0730-154810-7759anxv"
+		},
 		"AzureKeyVault_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://keyvaultOptum.vault.azure.net/"
@@ -45,6 +53,24 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Adf2DBx_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-7405606959126594.14.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('Adf2DBx_ls_accessToken')]"
+					},
+					"existingClusterId": "[parameters('Adf2DBx_ls_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureKeyVault')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -66,6 +92,329 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Bronze2Silver_PL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Connectors",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Optum-DBx/Project-Optum-DBx/Dbx-Transformations/Prod/Connectors_Prod"
+						},
+						"linkedServiceName": {
+							"referenceName": "Adf2DBx_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Generic",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Optum-DBx/Project-Optum-DBx/Dbx-Transformations/Prod/Generic_Prod"
+						},
+						"linkedServiceName": {
+							"referenceName": "Adf2DBx_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Claims",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Connectors",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Generic",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Optum-DBx/Project-Optum-DBx/Dbx-Transformations/Prod/Claims_Prod"
+						},
+						"linkedServiceName": {
+							"referenceName": "Adf2DBx_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Disease",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Connectors",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Generic",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Optum-DBx/Project-Optum-DBx/Dbx-Transformations/Prod/Disease_Prod"
+						},
+						"linkedServiceName": {
+							"referenceName": "Adf2DBx_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Group",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Connectors",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Generic",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Optum-DBx/Project-Optum-DBx/Dbx-Transformations/Prod/Group_Prod"
+						},
+						"linkedServiceName": {
+							"referenceName": "Adf2DBx_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Hospital",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Connectors",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Generic",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Optum-DBx/Project-Optum-DBx/Dbx-Transformations/Prod/Hospital_Prod"
+						},
+						"linkedServiceName": {
+							"referenceName": "Adf2DBx_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Patient",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Connectors",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Generic",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Optum-DBx/Project-Optum-DBx/Dbx-Transformations/Prod/Patient_Prod"
+						},
+						"linkedServiceName": {
+							"referenceName": "Adf2DBx_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "SubGroup",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Connectors",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Generic",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Optum-DBx/Project-Optum-DBx/Dbx-Transformations/Prod/SubGroup_Prod"
+						},
+						"linkedServiceName": {
+							"referenceName": "Adf2DBx_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Subscriber",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Connectors",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Generic",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Optum-DBx/Project-Optum-DBx/Dbx-Transformations/Prod/Subscriber_Prod"
+						},
+						"linkedServiceName": {
+							"referenceName": "Adf2DBx_ls",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Adf2DBx_ls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Silver2Gold_PL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Silver2Gold",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Optum-DBx/Project-Optum-DBx/Dbx-Transformations/Prod/Silver2Gold_Prod"
+						},
+						"linkedServiceName": {
+							"referenceName": "Adf2DBx_ls",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Adf2DBx_ls')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Adls2Adf_ls')]",
@@ -630,6 +979,89 @@
 				"[concat(variables('factoryId'), '/pipelines/Blob2Bronze_PL')]",
 				"[concat(variables('factoryId'), '/pipelines/MySql2Bronze_PL')]",
 				"[concat(variables('factoryId'), '/pipelines/Mongo2Bronze_PL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Optum_PL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "R2B",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Raw2Bronze_PL",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "B2S",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "R2B",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Bronze2Silver_PL",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "S2G",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "B2S",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Silver2Gold_PL",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Raw2Bronze_PL')]",
+				"[concat(variables('factoryId'), '/pipelines/Bronze2Silver_PL')]",
+				"[concat(variables('factoryId'), '/pipelines/Silver2Gold_PL')]"
 			]
 		}
 	]
