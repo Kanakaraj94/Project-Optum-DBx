@@ -129,7 +129,7 @@ Azure Key Vault is used for:
 ```text
 Optum/
 │
-├── notebooks/
+├── notebooks/Medallion/
 │   ├── bronze/
 │   ├── silver/
 │   └── gold/
