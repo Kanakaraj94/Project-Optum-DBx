@@ -21,14 +21,9 @@
 			{
 				"name": "B2S",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "R2B",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},
@@ -44,14 +39,9 @@
 			{
 				"name": "S2G",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "B2S",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},
